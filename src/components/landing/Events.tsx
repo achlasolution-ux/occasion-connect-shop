@@ -1,10 +1,11 @@
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import concert from "@/assets/event-concert.jpg";
 import theatre from "@/assets/event-theatre.jpg";
 import comedy from "@/assets/event-comedy.jpg";
 import sports from "@/assets/event-sports.jpg";
 
-type Event = {
+type Ev = {
   date: { d: string; m: string };
   title: string;
   venue: string;
@@ -13,12 +14,12 @@ type Event = {
   tag: string;
 };
 
-const events: Event[] = [
+const events: Ev[] = [
   {
     date: { d: "01", m: "Aug" },
     title: "TTNT 6 — The Live Concert",
     venue: "Carnivore Grounds · Nairobi",
-    price: "KES 1,500",
+    price: "$29",
     img: concert,
     tag: "Concert",
   },
@@ -26,7 +27,7 @@ const events: Event[] = [
     date: { d: "16", m: "May" },
     title: "In the Seashell Hum",
     venue: "Kenya National Theatre",
-    price: "KES 1,500",
+    price: "$22",
     img: theatre,
     tag: "Theatre",
   },
@@ -34,7 +35,7 @@ const events: Event[] = [
     date: { d: "31", m: "May" },
     title: "The Call — Old School Gospel",
     venue: "Sarit Expo Centre",
-    price: "KES 1,000",
+    price: "$18",
     img: comedy,
     tag: "Live show",
   },
@@ -42,7 +43,7 @@ const events: Event[] = [
     date: { d: "26", m: "Apr" },
     title: "AFC Leopards vs Gor Mahia",
     venue: "Nyayo Stadium",
-    price: "KES 300",
+    price: "$8",
     img: sports,
     tag: "Sports",
   },
@@ -53,14 +54,17 @@ export function Events() {
     <section id="events" className="bg-warm py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
-              Now on sale
-            </p>
-            <h2 className="mt-2 font-display text-4xl font-black tracking-tight sm:text-5xl">
-              Events ticketed by Pulse
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Now on sale</p>
+            <h2 className="mt-2 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+              Find your next night out.
             </h2>
-          </div>
+          </motion.div>
           <a
             href="#"
             className="group inline-flex items-center gap-2 text-sm font-bold text-foreground hover:text-accent"
@@ -71,10 +75,14 @@ export function Events() {
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {events.map((e) => (
-            <a
+          {events.map((e, i) => (
+            <motion.a
               key={e.title}
               href="#"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
               className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-card transition hover:-translate-y-1 hover:shadow-lift"
             >
               <div className="relative aspect-[4/5] overflow-hidden">
@@ -85,21 +93,17 @@ export function Events() {
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                 />
                 <div className="absolute left-3 top-3 flex flex-col items-center justify-center rounded-xl bg-background/95 px-3 py-2 text-center shadow-card backdrop-blur">
-                  <div className="font-display text-2xl font-black leading-none text-accent">
+                  <div className="font-display text-2xl font-extrabold leading-none text-accent">
                     {e.date.d}
                   </div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider">
-                    {e.date.m}
-                  </div>
+                  <div className="text-[10px] font-bold uppercase tracking-wider">{e.date.m}</div>
                 </div>
                 <div className="absolute right-3 top-3 rounded-full bg-foreground/85 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-background backdrop-blur">
                   {e.tag}
                 </div>
               </div>
               <div className="flex flex-1 flex-col gap-2 p-5">
-                <h3 className="font-display text-lg font-bold leading-tight">
-                  {e.title}
-                </h3>
+                <h3 className="font-display text-lg font-bold leading-tight">{e.title}</h3>
                 <p className="text-xs text-muted-foreground">{e.venue}</p>
                 <div className="mt-auto flex items-end justify-between pt-3">
                   <div>
@@ -113,7 +117,7 @@ export function Events() {
                   </span>
                 </div>
               </div>
-            </a>
+            </motion.a>
           ))}
         </div>
       </div>
