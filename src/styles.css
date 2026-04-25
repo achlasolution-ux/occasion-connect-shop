@@ -2,6 +2,8 @@
 @source "../src";
 @import "tw-animate-css";
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 @custom-variant dark (&:is(.dark *));
 
 /*
@@ -59,12 +61,26 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-violet: var(--violet);
+  --color-cyan: var(--cyan);
+  --color-fuchsia: var(--fuchsia);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  color-scheme: dark;
+  --radius: 0.75rem;
+  --background: oklch(0.13 0.025 270);
+  --foreground: oklch(0.97 0.01 260);
+  --violet: oklch(0.65 0.24 295);
+  --cyan: oklch(0.78 0.16 200);
+  --fuchsia: oklch(0.7 0.27 330);
+  --gradient-brand: linear-gradient(135deg, oklch(0.65 0.24 295), oklch(0.78 0.16 200));
+  --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.65 0.24 295 / 0.35), transparent 70%);
+  --shadow-glow: 0 0 80px -10px oklch(0.65 0.24 295 / 0.5);
+  --shadow-elegant: 0 20px 60px -20px oklch(0.1 0.02 270 / 0.8);
+  --_unused: oklch(1 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
