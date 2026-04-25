@@ -2,26 +2,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/landing/Nav";
 import { Hero } from "@/components/landing/Hero";
 import { Events } from "@/components/landing/Events";
-import { Escapes } from "@/components/landing/Escapes";
-import { Destinations } from "@/components/landing/Destinations";
-import { Streams } from "@/components/landing/Streams";
-import { Insider } from "@/components/landing/Insider";
+import { Merch } from "@/components/landing/Merch";
+import { Organizers } from "@/components/landing/Organizers";
 import { CTA } from "@/components/landing/CTA";
 import { Footer } from "@/components/landing/Footer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pulse — Events, tickets, hotels & travel in one place" },
+      { title: "Pulse — Tickets and merch for live events" },
       {
         name: "description",
         content:
-          "Buy tickets to live events, book hotels, plan travel, and stream shows live. Pulse is the all-in-one event & travel platform.",
+          "Buy tickets to live events and shop official merch from the artists. Pulse is the all-in-one platform for tickets and tour merch.",
       },
-      { property: "og:title", content: "Pulse — Events, tickets, hotels & travel" },
+      { property: "og:title", content: "Pulse — Tickets and merch for live events" },
       {
         property: "og:description",
-        content: "Tickets, stays, streams and travel — all in one platform.",
+        content: "Tickets, tees, hoodies — straight from the artist.",
       },
     ],
   }),
@@ -35,10 +33,8 @@ function Index() {
       <main>
         <Hero />
         <Events />
-        <Escapes />
-        <Destinations />
-        <Streams />
-        <Insider />
+        <Merch />
+        <Organizers />
         <CTA />
       </main>
       <Footer />
