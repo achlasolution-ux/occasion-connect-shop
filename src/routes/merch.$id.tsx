@@ -41,7 +41,7 @@ export const Route = createFileRoute("/merch/$id")({
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { product } = Route.useLoaderData() as { product: Product };
   const navigate = useNavigate();
   const [size, setSize] = useState(product.sizes[0]);
   const [qty, setQty] = useState(1);
