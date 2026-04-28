@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, MapPin, Calendar } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-event.jpg";
 
 export function Hero() {
@@ -65,19 +66,19 @@ export function Hero() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#events"
+            <Link
+              to="/events"
               className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-sm font-bold text-background transition hover:opacity-90"
             >
               Browse events
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href="#merch"
+            </Link>
+            <Link
+              to="/merch"
               className="inline-flex items-center gap-2 rounded-full border-2 border-foreground px-6 py-3.5 text-sm font-bold text-foreground transition hover:bg-foreground hover:text-background"
             >
               Shop merch
-            </a>
+            </Link>
           </div>
         </motion.div>
 
