@@ -2,12 +2,12 @@ import { createFileRoute, Link, useNavigate, notFound } from "@tanstack/react-ro
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { getEvent, formatMoney } from "@/lib/data";
+import { getEvent, formatMoney, type EventItem, type TicketTier } from "@/lib/data";
 import { cart } from "@/lib/cart";
 import { MapPin, Calendar, Clock, Minus, Plus, ShieldCheck, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/events/$id")({
-  loader: ({ params }) => {
+  loader: ({ params }): { event: NonNullable<ReturnType<typeof getEvent>> } => {
     const event = getEvent(params.id);
     if (!event) throw notFound();
     return { event };
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/events/$id")({
 });
 
 function EventDetailPage() {
-  const { event } = Route.useLoaderData();
+  const { event } = Route.useLoaderData() as { event: EventItem };
   const navigate = useNavigate();
   const [selected, setSelected] = useState<Record<string, number>>({});
 
