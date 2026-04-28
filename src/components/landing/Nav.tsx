@@ -1,16 +1,19 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCart, cartCount } from "@/lib/cart";
 
 const links = [
-  { label: "Events", href: "#events" },
-  { label: "Merch", href: "#merch" },
-  { label: "Organizers", href: "#organizers" },
+  { label: "Events", to: "/events" as const },
+  { label: "Merch", to: "/merch" as const },
+  { label: "Tickets", to: "/tickets" as const },
 ];
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const items = useCart();
+  const count = cartCount(items);
   return (
     <header className="sticky top-0 z-50 bg-brand text-brand-foreground">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
@@ -23,26 +26,42 @@ export function Nav() {
           </Link>
           <nav className="hidden items-center gap-1 lg:flex">
             {links.map((l) => (
-              <a
+              <Link
                 key={l.label}
-                href={l.href}
+                to={l.to}
+                activeProps={{ className: "bg-foreground/10 text-brand-foreground" }}
                 className="rounded-full px-4 py-2 text-sm font-semibold text-brand-foreground/80 transition hover:bg-brand-foreground/10 hover:text-brand-foreground"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
-          <a href="#" className="hidden text-sm font-semibold text-brand-foreground/80 transition hover:text-brand-foreground sm:inline">
+          <Link
+            to="/login"
+            className="hidden text-sm font-semibold text-brand-foreground/80 transition hover:text-brand-foreground sm:inline"
+          >
             Login
-          </a>
-          <a
-            href="#"
-            className="rounded-full bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:opacity-90"
+          </Link>
+          <Link
+            to="/cart"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-foreground/10 transition hover:bg-foreground/20"
+            aria-label="Cart"
+          >
+            <ShoppingBag className="h-4 w-4" />
+            {count > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-bold text-background">
+                {count}
+              </span>
+            )}
+          </Link>
+          <Link
+            to="/events"
+            className="hidden rounded-full bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:opacity-90 sm:inline-flex"
           >
             Get tickets
-          </a>
+          </Link>
           <button
             aria-label="Menu"
             onClick={() => setOpen(!open)}
@@ -62,15 +81,22 @@ export function Nav() {
           >
             <div className="flex flex-col px-4 py-3">
               {links.map((l) => (
-                <a
+                <Link
                   key={l.label}
-                  href={l.href}
+                  to={l.to}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-2 text-sm font-semibold hover:bg-foreground/10"
                 >
                   {l.label}
-                </a>
+                </Link>
               ))}
+              <Link
+                to="/login"
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-2 text-sm font-semibold hover:bg-foreground/10"
+              >
+                Login
+              </Link>
             </div>
           </motion.nav>
         )}
