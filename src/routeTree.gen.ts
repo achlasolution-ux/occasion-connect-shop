@@ -9,12 +9,46 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as MerchRouteImport } from './routes/merch'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TicketsIndexRouteImport } from './routes/tickets.index'
+import { Route as TicketsOrderIdRouteImport } from './routes/tickets.$orderId'
+import { Route as MerchIdRouteImport } from './routes/merch.$id'
+import { Route as EventsIdRouteImport } from './routes/events.$id'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MerchRoute = MerchRouteImport.update({
+  id: '/merch',
+  path: '/merch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,40 +56,163 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TicketsIndexRoute = TicketsIndexRouteImport.update({
+  id: '/tickets/',
+  path: '/tickets/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TicketsOrderIdRoute = TicketsOrderIdRouteImport.update({
+  id: '/tickets/$orderId',
+  path: '/tickets/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MerchIdRoute = MerchIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MerchRoute,
+} as any)
+const EventsIdRoute = EventsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EventsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
+  '/merch': typeof MerchRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/events/$id': typeof EventsIdRoute
+  '/merch/$id': typeof MerchIdRoute
+  '/tickets/$orderId': typeof TicketsOrderIdRoute
+  '/tickets/': typeof TicketsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
+  '/merch': typeof MerchRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/events/$id': typeof EventsIdRoute
+  '/merch/$id': typeof MerchIdRoute
+  '/tickets/$orderId': typeof TicketsOrderIdRoute
+  '/tickets': typeof TicketsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
+  '/merch': typeof MerchRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/events/$id': typeof EventsIdRoute
+  '/merch/$id': typeof MerchIdRoute
+  '/tickets/$orderId': typeof TicketsOrderIdRoute
+  '/tickets/': typeof TicketsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/events'
+    | '/login'
+    | '/merch'
+    | '/signup'
+    | '/events/$id'
+    | '/merch/$id'
+    | '/tickets/$orderId'
+    | '/tickets/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login'
+  to:
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/events'
+    | '/login'
+    | '/merch'
+    | '/signup'
+    | '/events/$id'
+    | '/merch/$id'
+    | '/tickets/$orderId'
+    | '/tickets'
+  id:
+    | '__root__'
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/events'
+    | '/login'
+    | '/merch'
+    | '/signup'
+    | '/events/$id'
+    | '/merch/$id'
+    | '/tickets/$orderId'
+    | '/tickets/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
+  EventsRoute: typeof EventsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MerchRoute: typeof MerchRouteWithChildren
+  SignupRoute: typeof SignupRoute
+  TicketsOrderIdRoute: typeof TicketsOrderIdRoute
+  TicketsIndexRoute: typeof TicketsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/merch': {
+      id: '/merch'
+      path: '/merch'
+      fullPath: '/merch'
+      preLoaderRoute: typeof MerchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -65,12 +222,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tickets/': {
+      id: '/tickets/'
+      path: '/tickets'
+      fullPath: '/tickets/'
+      preLoaderRoute: typeof TicketsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tickets/$orderId': {
+      id: '/tickets/$orderId'
+      path: '/tickets/$orderId'
+      fullPath: '/tickets/$orderId'
+      preLoaderRoute: typeof TicketsOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/merch/$id': {
+      id: '/merch/$id'
+      path: '/$id'
+      fullPath: '/merch/$id'
+      preLoaderRoute: typeof MerchIdRouteImport
+      parentRoute: typeof MerchRoute
+    }
+    '/events/$id': {
+      id: '/events/$id'
+      path: '/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof EventsIdRouteImport
+      parentRoute: typeof EventsRoute
+    }
   }
 }
 
+interface EventsRouteChildren {
+  EventsIdRoute: typeof EventsIdRoute
+}
+
+const EventsRouteChildren: EventsRouteChildren = {
+  EventsIdRoute: EventsIdRoute,
+}
+
+const EventsRouteWithChildren =
+  EventsRoute._addFileChildren(EventsRouteChildren)
+
+interface MerchRouteChildren {
+  MerchIdRoute: typeof MerchIdRoute
+}
+
+const MerchRouteChildren: MerchRouteChildren = {
+  MerchIdRoute: MerchIdRoute,
+}
+
+const MerchRouteWithChildren = MerchRoute._addFileChildren(MerchRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
+  EventsRoute: EventsRouteWithChildren,
   LoginRoute: LoginRoute,
+  MerchRoute: MerchRouteWithChildren,
+  SignupRoute: SignupRoute,
+  TicketsOrderIdRoute: TicketsOrderIdRoute,
+  TicketsIndexRoute: TicketsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
