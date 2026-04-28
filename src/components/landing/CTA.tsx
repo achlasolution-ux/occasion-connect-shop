@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export function CTA() {
   return (
     <section className="relative overflow-hidden bg-accent py-20 text-accent-foreground sm:py-28">
@@ -12,22 +14,22 @@ export function CTA() {
           Run your event on Pulse.
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-accent-foreground/85">
-          Sell tickets, manage entry, host live streams, and partner hotels — all
-          from one dashboard. Set up in under 10 minutes.
+          Sell tickets, launch merch drops and manage entry — all from one
+          dashboard. Set up in under 10 minutes.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <a
-            href="#"
+          <Link
+            to="/signup"
             className="rounded-full bg-foreground px-6 py-3.5 text-sm font-bold text-background transition hover:opacity-90"
           >
             Become an organizer
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="/events"
             className="rounded-full border-2 border-accent-foreground px-6 py-3.5 text-sm font-bold transition hover:bg-accent-foreground hover:text-accent"
           >
-            Talk to sales
-          </a>
+            Browse events
+          </Link>
         </div>
       </div>
     </section>
