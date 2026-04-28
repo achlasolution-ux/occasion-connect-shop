@@ -1,4 +1,17 @@
 import { Instagram, Twitter, Facebook } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+
+const explore = [
+  { label: "Events", to: "/events" as const },
+  { label: "Merch", to: "/merch" as const },
+  { label: "My tickets", to: "/tickets" as const },
+  { label: "Login", to: "/login" as const },
+];
+const legal = [
+  { label: "Terms", to: "/terms" as const },
+  { label: "Refunds", to: "/refunds" as const },
+  { label: "Privacy", to: "/privacy" as const },
+];
 
 export function Footer() {
   return (
@@ -33,20 +46,20 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-brand">Explore</h4>
             <ul className="mt-4 space-y-2 text-sm text-background/80">
-              {["Events", "Merch", "Organizers", "Pricing"].map((l) => (
-                <li key={l}>
-                  <a href="#" className="hover:text-brand">{l}</a>
+              {explore.map((l) => (
+                <li key={l.label}>
+                  <Link to={l.to} className="hover:text-brand">{l.label}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-brand">Company</h4>
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-brand">Legal</h4>
             <ul className="mt-4 space-y-2 text-sm text-background/80">
-              {["About", "Careers", "Press", "Contact"].map((l) => (
-                <li key={l}>
-                  <a href="#" className="hover:text-brand">{l}</a>
+              {legal.map((l) => (
+                <li key={l.label}>
+                  <Link to={l.to} className="hover:text-brand">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -70,9 +83,9 @@ export function Footer() {
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-background/10 pt-6 text-xs text-background/60">
           <span>© {new Date().getFullYear()} Pulse. All rights reserved.</span>
           <div className="flex gap-5">
-            <a href="#" className="hover:text-brand">Terms</a>
-            <a href="#" className="hover:text-brand">Privacy</a>
-            <a href="#" className="hover:text-brand">Refunds</a>
+            <Link to="/terms" className="hover:text-brand">Terms</Link>
+            <Link to="/privacy" className="hover:text-brand">Privacy</Link>
+            <Link to="/refunds" className="hover:text-brand">Refunds</Link>
           </div>
         </div>
       </div>
