@@ -9,7 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RefundsRouteImport } from './routes/refunds'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MerchRouteImport } from './routes/merch'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as EventsRouteImport } from './routes/events'
@@ -21,9 +24,24 @@ import { Route as TicketsOrderIdRouteImport } from './routes/tickets.$orderId'
 import { Route as MerchIdRouteImport } from './routes/merch.$id'
 import { Route as EventsIdRouteImport } from './routes/events.$id'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundsRoute = RefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MerchRoute = MerchRouteImport.update({
@@ -84,7 +102,10 @@ export interface FileRoutesByFullPath {
   '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
   '/merch': typeof MerchRouteWithChildren
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/events/$id': typeof EventsIdRoute
   '/merch/$id': typeof MerchIdRoute
   '/tickets/$orderId': typeof TicketsOrderIdRoute
@@ -97,7 +118,10 @@ export interface FileRoutesByTo {
   '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
   '/merch': typeof MerchRouteWithChildren
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/events/$id': typeof EventsIdRoute
   '/merch/$id': typeof MerchIdRoute
   '/tickets/$orderId': typeof TicketsOrderIdRoute
@@ -111,7 +135,10 @@ export interface FileRoutesById {
   '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
   '/merch': typeof MerchRouteWithChildren
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/events/$id': typeof EventsIdRoute
   '/merch/$id': typeof MerchIdRoute
   '/tickets/$orderId': typeof TicketsOrderIdRoute
@@ -126,7 +153,10 @@ export interface FileRouteTypes {
     | '/events'
     | '/login'
     | '/merch'
+    | '/privacy'
+    | '/refunds'
     | '/signup'
+    | '/terms'
     | '/events/$id'
     | '/merch/$id'
     | '/tickets/$orderId'
@@ -139,7 +169,10 @@ export interface FileRouteTypes {
     | '/events'
     | '/login'
     | '/merch'
+    | '/privacy'
+    | '/refunds'
     | '/signup'
+    | '/terms'
     | '/events/$id'
     | '/merch/$id'
     | '/tickets/$orderId'
@@ -152,7 +185,10 @@ export interface FileRouteTypes {
     | '/events'
     | '/login'
     | '/merch'
+    | '/privacy'
+    | '/refunds'
     | '/signup'
+    | '/terms'
     | '/events/$id'
     | '/merch/$id'
     | '/tickets/$orderId'
@@ -166,18 +202,42 @@ export interface RootRouteChildren {
   EventsRoute: typeof EventsRouteWithChildren
   LoginRoute: typeof LoginRoute
   MerchRoute: typeof MerchRouteWithChildren
+  PrivacyRoute: typeof PrivacyRoute
+  RefundsRoute: typeof RefundsRoute
   SignupRoute: typeof SignupRoute
+  TermsRoute: typeof TermsRoute
   TicketsOrderIdRoute: typeof TicketsOrderIdRoute
   TicketsIndexRoute: typeof TicketsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refunds': {
+      id: '/refunds'
+      path: '/refunds'
+      fullPath: '/refunds'
+      preLoaderRoute: typeof RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/merch': {
@@ -281,7 +341,10 @@ const rootRouteChildren: RootRouteChildren = {
   EventsRoute: EventsRouteWithChildren,
   LoginRoute: LoginRoute,
   MerchRoute: MerchRouteWithChildren,
+  PrivacyRoute: PrivacyRoute,
+  RefundsRoute: RefundsRoute,
   SignupRoute: SignupRoute,
+  TermsRoute: TermsRoute,
   TicketsOrderIdRoute: TicketsOrderIdRoute,
   TicketsIndexRoute: TicketsIndexRoute,
 }
