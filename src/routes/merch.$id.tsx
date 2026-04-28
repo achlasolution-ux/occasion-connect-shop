@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate, notFound } from "@tanstack/react-ro
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { getProduct, formatMoney } from "@/lib/data";
+import { getProduct, formatMoney, type Product } from "@/lib/data";
 import { cart } from "@/lib/cart";
 import { Minus, Plus, ShoppingBag, Truck, RotateCcw } from "lucide-react";
 
