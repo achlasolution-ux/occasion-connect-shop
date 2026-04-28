@@ -42,7 +42,7 @@ export const Route = createFileRoute("/events/$id")({
 });
 
 function EventDetailPage() {
-  const { event } = Route.useLoaderData();
+  const { event } = Route.useLoaderData() as { event: EventItem };
   const navigate = useNavigate();
   const [selected, setSelected] = useState<Record<string, number>>({});
 
