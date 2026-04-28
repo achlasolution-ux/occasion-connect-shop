@@ -7,7 +7,7 @@ import { cart } from "@/lib/cart";
 import { MapPin, Calendar, Clock, Minus, Plus, ShieldCheck, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/events/$id")({
-  loader: ({ params }) => {
+  loader: ({ params }): { event: NonNullable<ReturnType<typeof getEvent>> } => {
     const event = getEvent(params.id);
     if (!event) throw notFound();
     return { event };
