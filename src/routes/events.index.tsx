@@ -5,7 +5,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { events, formatMoney } from "@/lib/data";
 import { MapPin, Calendar, Search, SlidersHorizontal, X } from "lucide-react";
 
-export const Route = createFileRoute("/events")({
+export const Route = createFileRoute("/events/")({
   head: () => ({
     meta: [
       { title: "Browse events — Pulse" },
