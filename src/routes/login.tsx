@@ -7,8 +7,8 @@ import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    redirect: typeof s.redirect === "string" ? s.redirect : "/tickets",
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => ({
+    redirect: typeof s.redirect === "string" ? s.redirect : undefined,
   }),
   head: () => ({
     meta: [
@@ -37,7 +37,7 @@ function LoginPage() {
       return;
     }
     toast.success("Welcome back");
-    navigate({ to: redirect });
+    navigate({ to: redirect ?? "/tickets" });
   };
 
   return (
