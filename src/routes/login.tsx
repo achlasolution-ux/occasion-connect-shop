@@ -37,7 +37,7 @@ function LoginPage() {
       return;
     }
     toast.success("Welcome back");
-    navigate({ to: redirect ?? "/tickets" });
+    navigate({ to: (redirect ?? "/tickets") as string });
   };
 
   return (
