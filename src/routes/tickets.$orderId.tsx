@@ -1,10 +1,10 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { orders, type TicketRecord } from "@/lib/cart";
-import { formatMoney } from "@/lib/data";
-import { CheckCircle2, Download, Calendar, MapPin, Ticket as TicketIcon } from "lucide-react";
+import { getOrderByNumber, type DBOrder, type DBOrderItem, type DBTicket } from "@/lib/orders";
+import { useAuth } from "@/lib/auth";
+import { CheckCircle2, Download, Calendar, MapPin, Ticket as TicketIcon, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/tickets/$orderId")({
   head: () => ({ meta: [{ title: "Your ticket — Pulse" }] }),
@@ -13,22 +13,33 @@ export const Route = createFileRoute("/tickets/$orderId")({
 
 function OrderPage() {
   const { orderId } = Route.useParams();
-  const [order, setOrder] = useState<TicketRecord | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const [data, setData] = useState<{ order: DBOrder; items: DBOrderItem[]; tickets: DBTicket[] } | null>(null);
+  const [pageReady, setPageReady] = useState(false);
 
   useEffect(() => {
-    setOrder(orders.get(orderId));
-    setLoading(false);
-  }, [orderId]);
+    if (loading) return;
+    if (!user) {
+      navigate({ to: "/login", search: { redirect: `/tickets/${orderId}` } });
+      return;
+    }
+    getOrderByNumber(orderId).then((r) => {
+      setData(r);
+      setPageReady(true);
+    });
+  }, [orderId, user, loading, navigate]);
 
-  if (loading) {
+  if (loading || !pageReady) {
     return (
       <SiteLayout>
-        <div className="py-32 text-center text-sm text-muted-foreground">Loading...</div>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
       </SiteLayout>
     );
   }
-  if (!order) {
+  if (!data) {
     return (
       <SiteLayout>
         <div className="mx-auto max-w-xl py-32 text-center">
@@ -39,8 +50,8 @@ function OrderPage() {
     );
   }
 
-  const tickets = order.items.filter((i) => i.kind === "ticket");
-  const merch = order.items.filter((i) => i.kind === "merch");
+  const { order, items, tickets } = data;
+  const merch = items.filter((i) => i.kind === "merch");
 
   return (
     <SiteLayout>
@@ -55,13 +66,13 @@ function OrderPage() {
             <CheckCircle2 className="h-6 w-6 text-accent" />
             <div>
               <h1 className="font-display text-xl font-bold">Payment successful</h1>
-              <p className="text-xs text-muted-foreground">Order {order.orderId} · {formatMoney(order.total)}</p>
+              <p className="text-xs text-muted-foreground">Order {order.order_number} · ${(order.total_cents / 100).toFixed(2)}</p>
             </div>
           </motion.div>
 
           {tickets.map((t, i) => (
             <motion.div
-              key={t.key}
+              key={t.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.05 * (i + 1) }}
@@ -71,28 +82,26 @@ function OrderPage() {
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand">
                   <TicketIcon className="h-4 w-4" /> Pulse ticket
                 </div>
-                <div className="text-xs text-background/60">{t.qty} × {t.tierName}</div>
+                <div className="text-xs text-background/60">{t.tier_name}</div>
               </div>
               <div className="grid gap-6 p-6 sm:grid-cols-[1fr_auto] sm:items-center">
                 <div>
-                  <h2 className="font-display text-3xl font-extrabold leading-tight">{t.eventTitle}</h2>
+                  <h2 className="font-display text-3xl font-extrabold leading-tight">{t.event_title}</h2>
                   <div className="mt-3 flex flex-wrap gap-4 text-sm text-background/80">
-                    <span className="flex items-center gap-2"><Calendar className="h-4 w-4 text-brand" />{t.eventDate}</span>
-                    <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand" />{t.eventVenue}</span>
+                    {t.event_date && <span className="flex items-center gap-2"><Calendar className="h-4 w-4 text-brand" />{t.event_date}</span>}
+                    {t.event_venue && <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand" />{t.event_venue}</span>}
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-3 text-xs">
-                    <InfoBox label="Tier" value={t.tierName ?? ""} />
-                    <InfoBox label="Qty" value={String(t.qty)} />
-                    <InfoBox label="Paid" value={formatMoney(t.price * t.qty)} />
+                    <InfoBox label="Tier" value={t.tier_name} />
+                    <InfoBox label="Status" value={t.status} />
+                    <InfoBox label="Code" value={t.ticket_code.slice(-6)} />
                   </div>
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <div className="rounded-2xl bg-background p-3">
-                    <QRBlock seed={`${order.orderId}-${t.key}`} />
+                    <QRBlock seed={t.ticket_code} />
                   </div>
-                  <div className="font-mono text-[10px] text-background/60">
-                    {order.orderId}-{t.tierId?.toUpperCase()}
-                  </div>
+                  <div className="font-mono text-[10px] text-background/60">{t.ticket_code}</div>
                 </div>
               </div>
               <div className="flex items-center justify-between gap-3 border-t border-background/10 bg-background/5 px-6 py-4">
@@ -112,13 +121,13 @@ function OrderPage() {
               <h3 className="font-display text-lg font-bold">Merch in this order</h3>
               <ul className="mt-4 space-y-3 text-sm">
                 {merch.map((m) => (
-                  <li key={m.key} className="flex items-center gap-3">
-                    {m.productImg && <img src={m.productImg} alt="" className="h-12 w-12 rounded-lg object-cover" />}
+                  <li key={m.id} className="flex items-center gap-3">
+                    {m.image_url && <img src={m.image_url} alt="" className="h-12 w-12 rounded-lg object-cover" />}
                     <div className="flex-1">
-                      <div className="font-semibold">{m.productName}</div>
-                      <div className="text-xs text-muted-foreground">Size {m.size} · Qty {m.qty}</div>
+                      <div className="font-semibold">{m.title}</div>
+                      <div className="text-xs text-muted-foreground">{m.subtitle} · Qty {m.quantity}</div>
                     </div>
-                    <div className="font-mono text-sm">{formatMoney(m.price * m.qty)}</div>
+                    <div className="font-mono text-sm">${((m.unit_price_cents * m.quantity) / 100).toFixed(2)}</div>
                   </li>
                 ))}
               </ul>
@@ -140,13 +149,12 @@ function InfoBox({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl bg-background/5 p-3">
       <div className="text-[10px] font-bold uppercase tracking-wider text-background/50">{label}</div>
-      <div className="mt-0.5 truncate text-sm font-bold">{value}</div>
+      <div className="mt-0.5 truncate text-sm font-bold uppercase">{value}</div>
     </div>
   );
 }
 
 function QRBlock({ seed }: { seed: string }) {
-  // Deterministic faux-QR pattern from seed — purely visual
   const size = 17;
   const cells: boolean[] = [];
   let h = 0;
@@ -155,7 +163,6 @@ function QRBlock({ seed }: { seed: string }) {
     h = (h * 1103515245 + 12345) >>> 0;
     cells.push((h & 1) === 1);
   }
-  // Fixed finder corners
   const isFinder = (x: number, y: number) => {
     const c = (cx: number, cy: number) =>
       x >= cx && x < cx + 7 && y >= cy && y < cy + 7 &&
@@ -166,11 +173,7 @@ function QRBlock({ seed }: { seed: string }) {
   const inFinderBox = (x: number, y: number) =>
     (x < 7 && y < 7) || (x >= size - 7 && y < 7) || (x < 7 && y >= size - 7);
   return (
-    <div
-      className="grid"
-      style={{ gridTemplateColumns: `repeat(${size}, 6px)`, gap: 0 }}
-      aria-label="Ticket QR code"
-    >
+    <div className="grid" style={{ gridTemplateColumns: `repeat(${size}, 6px)`, gap: 0 }} aria-label="Ticket QR code">
       {Array.from({ length: size * size }, (_, i) => {
         const x = i % size;
         const y = Math.floor(i / size);
