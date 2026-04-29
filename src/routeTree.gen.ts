@@ -15,11 +15,11 @@ import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MerchRouteImport } from './routes/merch'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as EventsRouteImport } from './routes/events'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TicketsIndexRouteImport } from './routes/tickets.index'
+import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as TicketsOrderIdRouteImport } from './routes/tickets.$orderId'
 import { Route as MerchIdRouteImport } from './routes/merch.$id'
 import { Route as EventsIdRouteImport } from './routes/events.$id'
@@ -54,11 +54,6 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
@@ -79,6 +74,11 @@ const TicketsIndexRoute = TicketsIndexRouteImport.update({
   path: '/tickets/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsIndexRoute = EventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TicketsOrderIdRoute = TicketsOrderIdRouteImport.update({
   id: '/tickets/$orderId',
   path: '/tickets/$orderId',
@@ -90,16 +90,15 @@ const MerchIdRoute = MerchIdRouteImport.update({
   getParentRoute: () => MerchRoute,
 } as any)
 const EventsIdRoute = EventsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => EventsRoute,
+  id: '/events/$id',
+  path: '/events/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
-  '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
   '/merch': typeof MerchRouteWithChildren
   '/privacy': typeof PrivacyRoute
@@ -109,13 +108,13 @@ export interface FileRoutesByFullPath {
   '/events/$id': typeof EventsIdRoute
   '/merch/$id': typeof MerchIdRoute
   '/tickets/$orderId': typeof TicketsOrderIdRoute
+  '/events/': typeof EventsIndexRoute
   '/tickets/': typeof TicketsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
-  '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
   '/merch': typeof MerchRouteWithChildren
   '/privacy': typeof PrivacyRoute
@@ -125,6 +124,7 @@ export interface FileRoutesByTo {
   '/events/$id': typeof EventsIdRoute
   '/merch/$id': typeof MerchIdRoute
   '/tickets/$orderId': typeof TicketsOrderIdRoute
+  '/events': typeof EventsIndexRoute
   '/tickets': typeof TicketsIndexRoute
 }
 export interface FileRoutesById {
@@ -132,7 +132,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
-  '/events': typeof EventsRouteWithChildren
   '/login': typeof LoginRoute
   '/merch': typeof MerchRouteWithChildren
   '/privacy': typeof PrivacyRoute
@@ -142,6 +141,7 @@ export interface FileRoutesById {
   '/events/$id': typeof EventsIdRoute
   '/merch/$id': typeof MerchIdRoute
   '/tickets/$orderId': typeof TicketsOrderIdRoute
+  '/events/': typeof EventsIndexRoute
   '/tickets/': typeof TicketsIndexRoute
 }
 export interface FileRouteTypes {
@@ -150,7 +150,6 @@ export interface FileRouteTypes {
     | '/'
     | '/cart'
     | '/checkout'
-    | '/events'
     | '/login'
     | '/merch'
     | '/privacy'
@@ -160,13 +159,13 @@ export interface FileRouteTypes {
     | '/events/$id'
     | '/merch/$id'
     | '/tickets/$orderId'
+    | '/events/'
     | '/tickets/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/cart'
     | '/checkout'
-    | '/events'
     | '/login'
     | '/merch'
     | '/privacy'
@@ -176,13 +175,13 @@ export interface FileRouteTypes {
     | '/events/$id'
     | '/merch/$id'
     | '/tickets/$orderId'
+    | '/events'
     | '/tickets'
   id:
     | '__root__'
     | '/'
     | '/cart'
     | '/checkout'
-    | '/events'
     | '/login'
     | '/merch'
     | '/privacy'
@@ -192,6 +191,7 @@ export interface FileRouteTypes {
     | '/events/$id'
     | '/merch/$id'
     | '/tickets/$orderId'
+    | '/events/'
     | '/tickets/'
   fileRoutesById: FileRoutesById
 }
@@ -199,14 +199,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
-  EventsRoute: typeof EventsRouteWithChildren
   LoginRoute: typeof LoginRoute
   MerchRoute: typeof MerchRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
+  EventsIdRoute: typeof EventsIdRoute
   TicketsOrderIdRoute: typeof TicketsOrderIdRoute
+  EventsIndexRoute: typeof EventsIndexRoute
   TicketsIndexRoute: typeof TicketsIndexRoute
 }
 
@@ -254,13 +255,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
@@ -289,6 +283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TicketsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events/': {
+      id: '/events/'
+      path: '/events'
+      fullPath: '/events/'
+      preLoaderRoute: typeof EventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tickets/$orderId': {
       id: '/tickets/$orderId'
       path: '/tickets/$orderId'
@@ -305,24 +306,13 @@ declare module '@tanstack/react-router' {
     }
     '/events/$id': {
       id: '/events/$id'
-      path: '/$id'
+      path: '/events/$id'
       fullPath: '/events/$id'
       preLoaderRoute: typeof EventsIdRouteImport
-      parentRoute: typeof EventsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface EventsRouteChildren {
-  EventsIdRoute: typeof EventsIdRoute
-}
-
-const EventsRouteChildren: EventsRouteChildren = {
-  EventsIdRoute: EventsIdRoute,
-}
-
-const EventsRouteWithChildren =
-  EventsRoute._addFileChildren(EventsRouteChildren)
 
 interface MerchRouteChildren {
   MerchIdRoute: typeof MerchIdRoute
@@ -338,14 +328,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
-  EventsRoute: EventsRouteWithChildren,
   LoginRoute: LoginRoute,
   MerchRoute: MerchRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
+  EventsIdRoute: EventsIdRoute,
   TicketsOrderIdRoute: TicketsOrderIdRoute,
+  EventsIndexRoute: EventsIndexRoute,
   TicketsIndexRoute: TicketsIndexRoute,
 }
 export const routeTree = rootRouteImport

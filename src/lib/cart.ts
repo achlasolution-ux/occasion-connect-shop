@@ -53,8 +53,9 @@ function subscribe(l: () => void) {
 function getSnapshot() {
   return state;
 }
+const EMPTY: CartItem[] = [];
 function getServerSnapshot() {
-  return [] as CartItem[];
+  return EMPTY;
 }
 
 export function useCart() {
