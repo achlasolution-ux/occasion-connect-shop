@@ -60,8 +60,28 @@ function CheckoutPage() {
     <SiteLayout>
       <section className="bg-warm py-10 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <h1 className="font-display text-4xl font-extrabold">Checkout</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Almost there. Review and pay.</p>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <Link to="/cart" className="text-xs font-bold uppercase tracking-[0.2em] text-brand hover:opacity-80">
+                ← Back to cart
+              </Link>
+              <h1 className="mt-2 font-display text-4xl font-extrabold sm:text-5xl">Checkout</h1>
+              <p className="mt-1 text-sm text-muted-foreground">Almost there. Review and pay.</p>
+            </div>
+            <ol className="hidden items-center gap-2 text-xs font-bold uppercase tracking-wider sm:flex">
+              <li className="flex items-center gap-2 rounded-full bg-foreground px-3 py-1.5 text-background">
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-brand text-brand-foreground">1</span> Contact
+              </li>
+              <span className="h-px w-6 bg-foreground/30" />
+              <li className="flex items-center gap-2 rounded-full bg-foreground px-3 py-1.5 text-background">
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-brand text-brand-foreground">2</span> Delivery
+              </li>
+              <span className="h-px w-6 bg-foreground/30" />
+              <li className="flex items-center gap-2 rounded-full bg-foreground px-3 py-1.5 text-background">
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-brand text-brand-foreground">3</span> Pay
+              </li>
+            </ol>
+          </div>
 
           <form onSubmit={onSubmit} className="mt-8 grid gap-8 lg:grid-cols-[1fr_420px]">
             <div className="space-y-8">
