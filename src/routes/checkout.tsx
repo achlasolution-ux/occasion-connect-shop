@@ -1,15 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { useCart, cart, cartTotal, orders } from "@/lib/cart";
+import { useCart, cart, cartTotal } from "@/lib/cart";
 import { formatMoney } from "@/lib/data";
-import { ShieldCheck, Smartphone, CreditCard, Apple, Lock, ArrowRight } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { createOrder } from "@/lib/orders";
+import { ShieldCheck, Smartphone, CreditCard, Apple, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({
-    meta: [{ title: "Checkout — Pulse" }],
-  }),
+  head: () => ({ meta: [{ title: "Checkout — Pulse" }] }),
   component: CheckoutPage,
 });
 
@@ -18,32 +19,59 @@ type PayMethod = "mpesa" | "card" | "apple";
 function CheckoutPage() {
   const items = useCart();
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [method, setMethod] = useState<PayMethod>("mpesa");
   const [form, setForm] = useState({ name: "", email: "", phone: "", card: "", exp: "", cvc: "" });
   const [processing, setProcessing] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate({ to: "/login", search: { redirect: "/checkout" } });
+    }
+    if (user) {
+      setForm((f) => ({
+        ...f,
+        email: f.email || user.email || "",
+        name: f.name || (user.user_metadata?.display_name as string) || "",
+      }));
+    }
+  }, [user, loading, navigate]);
 
   const subtotal = cartTotal(items);
   const fees = subtotal * 0.05;
   const total = subtotal + fees;
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (items.length === 0) return;
+    if (items.length === 0 || !user) return;
     setProcessing(true);
-    const orderId = `PLS-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-    setTimeout(() => {
-      orders.save({
-        orderId,
-        createdAt: new Date().toISOString(),
-        buyerName: form.name,
-        buyerEmail: form.email,
+    try {
+      const order = await createOrder({
+        userId: user.id,
         items,
         total,
+        subtotal,
+        customer: { name: form.name, email: form.email, phone: form.phone },
       });
       cart.clear();
-      navigate({ to: "/tickets/$orderId", params: { orderId } });
-    }, 900);
+      toast.success("Payment successful");
+      navigate({ to: "/tickets/$orderId", params: { orderId: order.order_number } });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Could not complete checkout";
+      toast.error(msg);
+      setProcessing(false);
+    }
   };
+
+  if (loading || !user) {
+    return (
+      <SiteLayout>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      </SiteLayout>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -85,7 +113,6 @@ function CheckoutPage() {
 
           <form onSubmit={onSubmit} className="mt-8 grid gap-8 lg:grid-cols-[1fr_420px]">
             <div className="space-y-8">
-              {/* Contact */}
               <section className="rounded-2xl bg-card p-6 shadow-card">
                 <Step n={1} label="Contact" />
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -94,7 +121,6 @@ function CheckoutPage() {
                 </div>
               </section>
 
-              {/* Delivery */}
               <section className="rounded-2xl bg-card p-6 shadow-card">
                 <Step n={2} label="Delivery" />
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -105,7 +131,6 @@ function CheckoutPage() {
                 </div>
               </section>
 
-              {/* Payment */}
               <section className="rounded-2xl bg-card p-6 shadow-card">
                 <Step n={3} label="Payment" />
                 <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -143,6 +168,7 @@ function CheckoutPage() {
                     </div>
                   )}
                 </motion.div>
+                <p className="mt-3 text-[11px] text-muted-foreground">Demo mode — no real charge will be made.</p>
               </section>
             </div>
 
@@ -176,7 +202,7 @@ function CheckoutPage() {
                 disabled={processing}
                 className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand py-3.5 text-sm font-bold text-brand-foreground transition hover:opacity-90 disabled:opacity-60"
               >
-                {processing ? "Processing..." : <>Pay {formatMoney(total)} <ArrowRight className="h-4 w-4" /></>}
+                {processing ? <><Loader2 className="h-4 w-4 animate-spin" /> Processing</> : <>Pay {formatMoney(total)} <ArrowRight className="h-4 w-4" /></>}
               </button>
               <div className="mt-4 flex items-center gap-2 text-xs text-background/60">
                 <ShieldCheck className="h-4 w-4 text-brand" />
@@ -204,19 +230,10 @@ function Step({ n, label }: { n: number; label: string }) {
 }
 
 function Input({
-  label,
-  value,
-  onChange,
-  type = "text",
-  placeholder,
-  required,
+  label, value, onChange, type = "text", placeholder, required,
 }: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  placeholder?: string;
-  required?: boolean;
+  label: string; value: string; onChange: (v: string) => void;
+  type?: string; placeholder?: string; required?: boolean;
 }) {
   return (
     <label className="block">
@@ -235,9 +252,7 @@ function Input({
 
 function MethodCard({
   active, onClick, icon, name, sub,
-}: {
-  active: boolean; onClick: () => void; icon: React.ReactNode; name: string; sub: string;
-}) {
+}: { active: boolean; onClick: () => void; icon: React.ReactNode; name: string; sub: string; }) {
   return (
     <button
       type="button"

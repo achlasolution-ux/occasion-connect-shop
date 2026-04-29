@@ -1,10 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { orders } from "@/lib/cart";
+import { useAuth } from "@/lib/auth";
+import { listMyOrders, listMyTickets, type DBOrder, type DBTicket } from "@/lib/orders";
 import { useEffect, useState } from "react";
-import { Ticket, ArrowRight } from "lucide-react";
-import { formatMoney } from "@/lib/data";
-import type { TicketRecord } from "@/lib/cart";
+import { Ticket, ArrowRight, Calendar, MapPin, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/tickets/")({
   head: () => ({ meta: [{ title: "My tickets — Pulse" }] }),
@@ -12,19 +11,45 @@ export const Route = createFileRoute("/tickets/")({
 });
 
 function TicketsPage() {
-  const [list, setList] = useState<TicketRecord[]>([]);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState<DBOrder[]>([]);
+  const [tickets, setTickets] = useState<DBTicket[]>([]);
+  const [pageReady, setPageReady] = useState(false);
+
   useEffect(() => {
-    setList(orders.list());
-  }, []);
+    if (loading) return;
+    if (!user) {
+      navigate({ to: "/login", search: { redirect: "/tickets" } });
+      return;
+    }
+    Promise.all([listMyOrders(), listMyTickets()]).then(([o, t]) => {
+      setOrders(o);
+      setTickets(t);
+      setPageReady(true);
+    });
+  }, [user, loading, navigate]);
+
+  if (loading || !pageReady) {
+    return (
+      <SiteLayout>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      </SiteLayout>
+    );
+  }
+
+  const upcoming = tickets;
 
   return (
     <SiteLayout>
       <section className="bg-warm py-14">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <h1 className="font-display text-4xl font-extrabold">My tickets</h1>
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <h1 className="font-display text-4xl font-extrabold sm:text-5xl">My tickets</h1>
           <p className="mt-1 text-sm text-muted-foreground">All your orders, ready at the gate.</p>
 
-          {list.length === 0 ? (
+          {upcoming.length === 0 && orders.length === 0 ? (
             <div className="mt-10 rounded-2xl bg-card p-10 text-center shadow-card">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-background">
                 <Ticket className="h-6 w-6" />
@@ -39,32 +64,65 @@ function TicketsPage() {
               </Link>
             </div>
           ) : (
-            <ul className="mt-8 space-y-4">
-              {list.map((o) => {
-                const tickets = o.items.filter((i) => i.kind === "ticket");
-                const merch = o.items.filter((i) => i.kind === "merch");
-                return (
-                  <li key={o.orderId}>
-                    <Link
-                      to="/tickets/$orderId"
-                      params={{ orderId: o.orderId }}
-                      className="group flex items-center justify-between gap-4 rounded-2xl bg-card p-5 shadow-card transition hover:-translate-y-0.5 hover:shadow-lift"
-                    >
-                      <div className="min-w-0">
-                        <div className="text-xs font-bold uppercase tracking-wider text-accent">Order {o.orderId}</div>
-                        <div className="mt-1 font-display text-lg font-bold truncate">
-                          {tickets[0]?.eventTitle ?? merch[0]?.productName ?? "Order"}
+            <>
+              {upcoming.length > 0 && (
+                <div className="mt-8">
+                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Tickets</h2>
+                  <ul className="mt-3 grid gap-4 sm:grid-cols-2">
+                    {upcoming.map((t) => {
+                      const orderNumber = orders.find((o) => o.id === t.order_id)?.order_number;
+                      return (
+                        <li key={t.id}>
+                          <Link
+                            to="/tickets/$orderId"
+                            params={{ orderId: orderNumber ?? "" }}
+                            className="group block rounded-2xl bg-foreground p-5 text-background shadow-card transition hover:-translate-y-0.5 hover:shadow-lift"
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="text-xs font-bold uppercase tracking-wider text-brand">{t.tier_name}</div>
+                              <div className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase text-brand-foreground">{t.status}</div>
+                            </div>
+                            <div className="mt-2 font-display text-xl font-extrabold leading-tight">{t.event_title}</div>
+                            <div className="mt-3 flex flex-wrap gap-3 text-xs text-background/70">
+                              {t.event_date && <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{t.event_date}</span>}
+                              {t.event_venue && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{t.event_venue}</span>}
+                            </div>
+                            <div className="mt-4 flex items-center justify-between border-t border-background/10 pt-3">
+                              <span className="font-mono text-[11px] text-background/60">{t.ticket_code}</span>
+                              <span className="text-xs font-bold text-brand group-hover:translate-x-1 transition">View →</span>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-10">
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-accent">All orders</h2>
+                <ul className="mt-3 space-y-3">
+                  {orders.map((o) => (
+                    <li key={o.id}>
+                      <Link
+                        to="/tickets/$orderId"
+                        params={{ orderId: o.order_number }}
+                        className="group flex items-center justify-between gap-4 rounded-2xl bg-card p-5 shadow-card transition hover:-translate-y-0.5 hover:shadow-lift"
+                      >
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold uppercase tracking-wider text-accent">{o.order_number}</div>
+                          <div className="mt-1 text-sm text-muted-foreground">{new Date(o.created_at).toLocaleString()}</div>
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {tickets.length} ticket{tickets.length === 1 ? "" : "s"} · {merch.length} merch item{merch.length === 1 ? "" : "s"} · {formatMoney(o.total)}
+                        <div className="flex items-center gap-4">
+                          <span className="font-mono text-sm font-bold">${(o.total_cents / 100).toFixed(2)}</span>
+                          <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
                         </div>
-                      </div>
-                      <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
           )}
         </div>
       </section>
