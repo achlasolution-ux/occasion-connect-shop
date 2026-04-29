@@ -1,10 +1,15 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    redirect: typeof s.redirect === "string" ? s.redirect : "/tickets",
+  }),
   head: () => ({
     meta: [
       { title: "Login — Pulse" },
@@ -16,8 +21,24 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { redirect } = useSearch({ from: "/login" });
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    const { error } = await signIn(email, password);
+    setBusy(false);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    toast.success("Welcome back");
+    navigate({ to: redirect });
+  };
 
   return (
     <SiteLayout>
@@ -47,10 +68,7 @@ function LoginPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ to: "/events" });
-            }}
+            onSubmit={onSubmit}
             className="rounded-3xl bg-card p-8 shadow-card"
           >
             <h2 className="font-display text-3xl font-extrabold">Sign in</h2>
@@ -89,22 +107,10 @@ function LoginPage() {
 
             <button
               type="submit"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-sm font-bold text-background transition hover:opacity-90"
+              disabled={busy}
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-sm font-bold text-background transition hover:opacity-90 disabled:opacity-60"
             >
-              Sign in <ArrowRight className="h-4 w-4" />
-            </button>
-
-            <div className="my-6 flex items-center gap-4 text-xs uppercase tracking-wider text-muted-foreground">
-              <div className="h-px flex-1 bg-border" />
-              or
-              <div className="h-px flex-1 bg-border" />
-            </div>
-
-            <button
-              type="button"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground py-3 text-sm font-bold text-foreground transition hover:bg-foreground hover:text-background"
-            >
-              Continue with Google
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Sign in <ArrowRight className="h-4 w-4" /></>}
             </button>
 
             <p className="mt-6 text-center text-sm text-muted-foreground">

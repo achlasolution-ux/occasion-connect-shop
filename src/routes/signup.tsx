@@ -2,7 +2,9 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { User, Mail, Lock, ArrowRight } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { User, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({
@@ -16,7 +18,27 @@ export const Route = createFileRoute("/signup")({
 
 function SignupPage() {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [busy, setBusy] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (form.password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+    setBusy(true);
+    const { error } = await signUp(form.email, form.password, form.name);
+    setBusy(false);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    toast.success("Account created — check your email to confirm, then sign in.");
+    navigate({ to: "/login" });
+  };
+
   return (
     <SiteLayout>
       <section className="bg-warm py-16 sm:py-24">
@@ -25,10 +47,7 @@ function SignupPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ to: "/events" });
-            }}
+            onSubmit={onSubmit}
             className="rounded-3xl bg-card p-8 shadow-card"
           >
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Get started</p>
@@ -70,9 +89,10 @@ function SignupPage() {
 
             <button
               type="submit"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-sm font-bold text-background transition hover:opacity-90"
+              disabled={busy}
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-sm font-bold text-background transition hover:opacity-90 disabled:opacity-60"
             >
-              Create account <ArrowRight className="h-4 w-4" />
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Create account <ArrowRight className="h-4 w-4" /></>}
             </button>
 
             <p className="mt-6 text-center text-sm text-muted-foreground">
