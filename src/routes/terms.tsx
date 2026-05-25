@@ -4,8 +4,8 @@ import { SiteLayout } from "@/components/SiteLayout";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms & Conditions — Pulse" },
-      { name: "description", content: "The terms that govern your use of Pulse tickets and merch." },
+      { title: "Terms & Conditions — Gateflow" },
+      { name: "description", content: "The terms that govern your use of Gateflow tickets and merch." },
     ],
   }),
   component: TermsPage,
@@ -22,23 +22,23 @@ function TermsPage() {
 
           <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-foreground/90">
             <Section title="1. Who we are">
-              Pulse is an online marketplace where event organizers sell tickets and official merchandise.
-              Pulse provides the platform, payments and ticket delivery. The event organizer listed on each
+              Gateflow is an online marketplace where event organizers sell tickets and official merchandise.
+              Gateflow provides the platform, payments and ticket delivery. The event organizer listed on each
               event page is the seller of the ticket and the merchandise and is responsible for the event
               itself, admission policies and product fulfillment.
             </Section>
 
             <Section title="2. Your account">
-              You must be at least 18 years old (or the age of majority in your country) to create a Pulse
+              You must be at least 18 years old (or the age of majority in your country) to create a Gateflow
               account. Keep your password safe — you are responsible for any activity on your account.
               Don't share accounts, bots, or scripts, and don't attempt to scrape, resell or re-price
-              tickets outside Pulse.
+              tickets outside Gateflow.
             </Section>
 
             <Section title="3. Buying tickets">
               Prices are shown in the currency displayed at checkout. A non-refundable service fee is added
               on top of the face value. A ticket is only valid once payment is fully captured and the QR code
-              is issued to your email and your Pulse account. Each QR code scans once — the first valid scan
+              is issued to your email and your Gateflow account. Each QR code scans once — the first valid scan
               admits one person.
             </Section>
 
@@ -60,19 +60,19 @@ function TermsPage() {
             </Section>
 
             <Section title="7. Intellectual property">
-              All logos, artwork and merch designs on Pulse remain the property of their respective artists
+              All logos, artwork and merch designs on Gateflow remain the property of their respective artists
               and organizers. You may not reproduce, resell or redistribute them without written permission.
             </Section>
 
             <Section title="8. Liability">
-              To the maximum extent permitted by law, Pulse's liability for any claim related to a ticket or
-              merch item is limited to the amount you paid for that item. Pulse is not responsible for the
+              To the maximum extent permitted by law, Gateflow's liability for any claim related to a ticket or
+              merch item is limited to the amount you paid for that item. Gateflow is not responsible for the
               content, safety or conduct of an event, which is the responsibility of the organizer.
             </Section>
 
             <Section title="9. Changes to these terms">
               We may update these terms from time to time. If we make material changes we'll notify you by
-              email or in-app. Continued use of Pulse after a change means you accept the updated terms.
+              email or in-app. Continued use of Gateflow after a change means you accept the updated terms.
             </Section>
 
             <Section title="10. Contact">

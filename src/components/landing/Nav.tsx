@@ -38,9 +38,9 @@ export function Nav() {
         <div className="flex items-center gap-10">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background">
-              <span className="font-display text-lg font-extrabold">P</span>
+              <span className="font-display text-lg font-extrabold">G</span>
             </div>
-            <span className="font-display text-2xl font-extrabold tracking-tight">Pulse</span>
+            <span className="font-display text-2xl font-extrabold tracking-tight">Gateflow</span>
           </Link>
           <nav className="hidden items-center gap-1 lg:flex">
             {links.map((l) => (

@@ -10,13 +10,13 @@ import { Footer } from "@/components/landing/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pulse — Tickets and merch for live events" },
+      { title: "Gateflow — Tickets and merch for live events" },
       {
         name: "description",
         content:
-          "Buy tickets to live events and shop official merch from the artists. Pulse is the all-in-one platform for tickets and tour merch.",
+          "Buy tickets to live events and shop official merch from the artists. Gateflow is the all-in-one platform for tickets and tour merch.",
       },
-      { property: "og:title", content: "Pulse — Tickets and merch for live events" },
+      { property: "og:title", content: "Gateflow — Tickets and merch for live events" },
       {
         property: "og:description",
         content: "Tickets, tees, hoodies — straight from the artist.",

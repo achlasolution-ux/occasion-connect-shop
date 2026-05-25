@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Ticket, ArrowRight, Calendar, MapPin, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/tickets/")({
-  head: () => ({ meta: [{ title: "My tickets — Pulse" }] }),
+  head: () => ({ meta: [{ title: "My tickets — Gateflow" }] }),
   component: TicketsPage,
 });
 

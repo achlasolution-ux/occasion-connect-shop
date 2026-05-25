@@ -12,8 +12,8 @@ export const Route = createFileRoute("/login")({
   }),
   head: () => ({
     meta: [
-      { title: "Login — Pulse" },
-      { name: "description", content: "Sign in to Pulse to manage your tickets and orders." },
+      { title: "Login — Gateflow" },
+      { name: "description", content: "Sign in to Gateflow to manage your tickets and orders." },
     ],
   }),
   component: LoginPage,
@@ -114,7 +114,7 @@ function LoginPage() {
             </button>
 
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              New to Pulse?{" "}
+              New to Gateflow?{" "}
               <Link to="/signup" className="font-bold text-foreground underline-offset-4 hover:underline">
                 Create an account
               </Link>

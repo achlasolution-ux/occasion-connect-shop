@@ -19,7 +19,7 @@ export function Merch() {
               Merch from the artists, <span className="italic text-brand">not resellers.</span>
             </h2>
             <p className="mt-3 max-w-xl text-background/70">
-              Every event on Pulse can launch a merch drop. Tees, hoodies, caps —
+              Every event on Gateflow can launch a merch drop. Tees, hoodies, caps —
               shipped from the organizer, money goes straight to the artist.
             </p>
           </motion.div>

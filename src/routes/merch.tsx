@@ -6,7 +6,7 @@ import { products, formatMoney } from "@/lib/data";
 export const Route = createFileRoute("/merch")({
   head: () => ({
     meta: [
-      { title: "Shop merch — Pulse" },
+      { title: "Shop merch — Gateflow" },
       { name: "description", content: "Official event merch — tees, hoodies and caps from the artists." },
     ],
   }),
