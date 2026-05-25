@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ShoppingBag } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { products, formatMoney } from "@/lib/data";
 
@@ -42,26 +42,35 @@ export function Merch() {
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
               <Link to="/merch/$id" params={{ id: m.slug }} className="group block">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-background/5">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-background/5 ring-1 ring-background/10">
                   <img
                     src={m.img}
                     alt={m.name}
                     loading="lazy"
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute right-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
+                  <div className="absolute left-3 top-3 rounded-full bg-brand px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-foreground shadow-card">
                     {m.type}
                   </div>
-                  <div className="absolute inset-x-3 bottom-3 translate-y-2 rounded-full bg-brand px-4 py-2.5 text-center text-xs font-bold text-brand-foreground opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100">
-                    View · {formatMoney(m.price)}
+                  <div className="absolute right-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground backdrop-blur">
+                    {formatMoney(m.price)}
+                  </div>
+                  <div className="absolute inset-x-3 bottom-3 translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                    <div className="flex items-center justify-center gap-2 rounded-full bg-background px-4 py-2.5 text-xs font-bold text-foreground shadow-lift">
+                      <ShoppingBag className="h-3.5 w-3.5" />
+                      Quick view
+                    </div>
                   </div>
                 </div>
-                <div className="mt-3 flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-display text-base font-bold">{m.name}</h3>
-                    <p className="text-xs text-background/60">{m.artist}</p>
+                <div className="mt-3.5 flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="truncate font-display text-base font-bold">{m.name}</h3>
+                    <p className="truncate text-xs text-background/60">{m.artist}</p>
                   </div>
-                  <span className="font-display text-base font-bold text-brand">{formatMoney(m.price)}</span>
+                  <span className="shrink-0 font-display text-base font-extrabold text-brand">
+                    {formatMoney(m.price)}
+                  </span>
                 </div>
               </Link>
             </motion.div>
