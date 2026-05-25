@@ -4,8 +4,8 @@ import { SiteLayout } from "@/components/SiteLayout";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy — Pulse" },
-      { name: "description", content: "How Pulse collects, uses and protects your data." },
+      { title: "Privacy — Gateflow" },
+      { name: "description", content: "How Gateflow collects, uses and protects your data." },
     ],
   }),
   component: PrivacyPage,

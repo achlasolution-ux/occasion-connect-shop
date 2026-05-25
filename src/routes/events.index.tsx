@@ -8,7 +8,7 @@ import { MapPin, Calendar, Search, SlidersHorizontal, X } from "lucide-react";
 export const Route = createFileRoute("/events/")({
   head: () => ({
     meta: [
-      { title: "Browse events — Pulse" },
+      { title: "Browse events — Gateflow" },
       { name: "description", content: "Concerts, theatre, sports and live shows. Find your next night out." },
     ],
   }),

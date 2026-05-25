@@ -11,7 +11,7 @@ export function CTA() {
       </div>
       <div className="relative mx-auto max-w-5xl px-4 text-center sm:px-6">
         <h2 className="font-display text-5xl font-black tracking-tight text-balance sm:text-6xl md:text-7xl">
-          Run your event on Pulse.
+          Run your event on Gateflow.
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-accent-foreground/85">
           Sell tickets, launch merch drops and manage entry — all from one

@@ -21,12 +21,12 @@ export function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-brand-foreground">
-                <span className="font-display text-lg font-extrabold">P</span>
+                <span className="font-display text-lg font-extrabold">G</span>
               </div>
-              <span className="font-display text-2xl font-extrabold">Pulse</span>
+              <span className="font-display text-2xl font-extrabold">Gateflow</span>
             </div>
             <p className="mt-4 max-w-md text-sm text-background/70">
-              Pulse is the home for live events. Sell tickets, launch merch drops,
+              Gateflow is the home for live events. Sell tickets, launch merch drops,
               and own your audience — all in one place.
             </p>
             <div className="mt-6 flex gap-3">
@@ -81,7 +81,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-background/10 pt-6 text-xs text-background/60">
-          <span>© {new Date().getFullYear()} Pulse. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Gateflow. All rights reserved.</span>
           <div className="flex gap-5">
             <Link to="/terms" className="hover:text-brand">Terms</Link>
             <Link to="/privacy" className="hover:text-brand">Privacy</Link>

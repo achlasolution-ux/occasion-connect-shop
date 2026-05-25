@@ -15,7 +15,7 @@ export const Route = createFileRoute("/events/$id")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.event.title} — Pulse` },
+          { title: `${loaderData.event.title} — Gateflow` },
           { name: "description", content: loaderData.event.about.slice(0, 150) },
           { property: "og:title", content: loaderData.event.title },
           { property: "og:image", content: loaderData.event.img },
