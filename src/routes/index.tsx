@@ -37,11 +37,15 @@ function Index() {
       <Nav />
       <main>
         <Hero />
+        <TrustBar />
         <Events />
         <HowItWorks />
         <Merch />
         <Organizers />
+        <Testimonials />
+        <FAQ />
         <CTA />
+
       </main>
       <Footer />
     </div>
