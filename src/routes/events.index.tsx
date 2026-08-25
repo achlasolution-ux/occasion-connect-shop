@@ -6,10 +6,15 @@ import { events, formatMoney } from "@/lib/data";
 import { MapPin, Calendar, Search, SlidersHorizontal, X } from "lucide-react";
 
 export const Route = createFileRoute("/events/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search['q'] === "string" ? (search['q'] as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Browse events — Gateflow" },
       { name: "description", content: "Concerts, theatre, sports and live shows. Find your next night out." },
+      { property: "og:title", content: "Browse events — Gateflow" },
+      { property: "og:description", content: "Filter live events by city, date, category and price." },
     ],
   }),
   component: EventsPage,
@@ -19,8 +24,10 @@ const categories = ["All", "Concert", "Theatre", "Sports", "Live show"] as const
 const sorts = ["Soonest", "Price: low to high", "Price: high to low"] as const;
 
 function EventsPage() {
+  const { q: initialQ } = Route.useSearch();
   const [cat, setCat] = useState<(typeof categories)[number]>("All");
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(initialQ ?? "");
+
   const [city, setCity] = useState<string>("All");
   const [priceMax, setPriceMax] = useState<number>(500);
   const [when, setWhen] = useState<"Any" | "This week" | "This month">("Any");
