@@ -6,8 +6,8 @@ import { events, formatMoney } from "@/lib/data";
 import { MapPin, Calendar, Search, SlidersHorizontal, X } from "lucide-react";
 
 export const Route = createFileRoute("/events/")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    q: typeof search['q'] === "string" ? (search['q'] as string) : undefined,
+  validateSearch: (search: { q?: string }): { q?: string } => ({
+    q: typeof search.q === "string" ? search.q : undefined,
   }),
   head: () => ({
     meta: [
