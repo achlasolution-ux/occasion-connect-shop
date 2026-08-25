@@ -58,32 +58,60 @@ export function Hero() {
             the official tee, hoodie or cap from the artist's drop.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm font-semibold">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate({ to: "/events", search: query ? { q: query } : {} });
+            }}
+            className="mt-8 flex max-w-lg items-center gap-2 rounded-full border border-foreground/10 bg-card p-2 shadow-card"
+          >
+            <Search className="ml-3 h-4 w-4 shrink-0 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search artists, venues or events"
+              aria-label="Search events"
+              className="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground"
+            />
+            <button
+              type="submit"
+              className="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-foreground px-5 py-2.5 text-sm font-bold text-background transition hover:opacity-90"
+            >
+              Search
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+            </button>
+          </form>
+
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-foreground/70">
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5" />
               <span>120+ shows this month</span>
             </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
+            <div className="flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5" />
               <span>14 cities</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>Verified organizers · secure checkout</span>
             </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-3">
             <Link
               to="/events"
-              className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-sm font-bold text-background transition hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-foreground px-6 py-3 text-sm font-bold text-foreground transition hover:bg-foreground hover:text-background"
             >
-              Browse events
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              Browse all events
             </Link>
             <Link
               to="/merch"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-foreground px-6 py-3.5 text-sm font-bold text-foreground transition hover:bg-foreground hover:text-background"
+              className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-foreground/80 underline-offset-4 transition hover:text-foreground hover:underline"
             >
               Shop merch
             </Link>
           </div>
+
         </motion.div>
 
         <motion.div
