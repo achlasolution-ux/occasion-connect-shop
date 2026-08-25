@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
-import { ArrowRight, MapPin, Calendar } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { ArrowRight, MapPin, Calendar, Search, ShieldCheck } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import heroImg from "@/assets/hero-event.jpg";
 
 export function Hero() {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+
   return (
     <section className="relative overflow-hidden bg-hero">
       {/* Marquee texture */}
