@@ -82,7 +82,7 @@ function OrderPage() {
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand">
                   <TicketIcon className="h-4 w-4" /> Achla ticket
                 </div>
-                <div className="text-xs text-background/60">{t.tier_name}</div>
+                <div className="text-xs text-background/60">{t.tier_name}{t.seat_label ? ` · Seat ${t.seat_label}` : ""}</div>
               </div>
               <div className="grid gap-6 p-6 sm:grid-cols-[1fr_auto] sm:items-center">
                 <div>
@@ -92,7 +92,7 @@ function OrderPage() {
                     {t.event_venue && <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand" />{t.event_venue}</span>}
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-3 text-xs">
-                    <InfoBox label="Tier" value={t.tier_name} />
+                    <InfoBox label="Seat" value={t.seat_label ? `${t.tier_name} · ${t.seat_label}` : t.tier_name} />
                     <InfoBox label="Status" value={t.status} />
                     <InfoBox label="Code" value={t.ticket_code.slice(-6)} />
                   </div>

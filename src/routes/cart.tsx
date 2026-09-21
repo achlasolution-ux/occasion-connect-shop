@@ -57,7 +57,7 @@ function CartPage() {
                     ) : (
                       <div className="flex h-full w-full flex-col items-center justify-center bg-foreground text-background">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-brand">Ticket</span>
-                        <span className="mt-1 font-display text-sm font-bold">{i.tierName}</span>
+                        <span className="mt-1 font-display text-sm font-bold">{i.tierName}{i.seatLabel ? ` · Seat ${i.seatLabel}` : ""}</span>
                       </div>
                     )}
                   </div>
@@ -70,7 +70,7 @@ function CartPage() {
                           </h3>
                           <p className="text-xs text-muted-foreground">
                             {i.kind === "ticket"
-                              ? `${i.tierName} · ${i.eventDate} · ${i.eventVenue}`
+                              ? `${i.tierName}${i.seatLabel ? ` · Seat ${i.seatLabel}` : ""} · ${i.eventDate} · ${i.eventVenue}`
                               : `Size ${i.size}`}
                           </p>
                         </div>
