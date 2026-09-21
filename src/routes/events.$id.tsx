@@ -44,33 +44,37 @@ export const Route = createFileRoute("/events/$id")({
 function EventDetailPage() {
   const { event } = Route.useLoaderData() as { event: EventItem };
   const navigate = useNavigate();
-  const [selected, setSelected] = useState<Record<string, number>>({});
-  const [openInfo, setOpenInfo] = useState<Record<string, boolean>>({});
+  const [selectedSeats, setSelectedSeats] = useState<SelectedSeat[]>([]);
   const [showFullAbout, setShowFullAbout] = useState(false);
 
-  const qtyFor = (id: string) => selected[id] ?? 0;
-  const setQty = (id: string, n: number) => setSelected((s) => ({ ...s, [id]: Math.max(0, Math.min(10, n)) }));
+  const toggleSeat = (seat: Seat, sectionName: string, price: number) => {
+    setSelectedSeats((cur) => {
+      if (cur.some((s) => s.id === seat.id)) return cur.filter((s) => s.id !== seat.id);
+      if (cur.length >= MAX_SEATS) return cur;
+      return [...cur, { ...seat, sectionName, price }];
+    });
+  };
 
-  const total = event.tiers.reduce((s, t) => s + t.price * qtyFor(t.id), 0);
-  const totalQty = event.tiers.reduce((s, t) => s + qtyFor(t.id), 0);
+  const total = selectedSeats.reduce((s, x) => s + x.price, 0);
+  const totalQty = selectedSeats.length;
 
   const addAllToCart = () => {
-    event.tiers.forEach((t) => {
-      const q = qtyFor(t.id);
-      if (q > 0) {
-        cart.add({
-          kind: "ticket",
-          eventId: event.id,
-          eventTitle: event.title,
-          eventDate: event.dateLabel.full,
-          eventVenue: `${event.venue} · ${event.city}`,
-          tierId: t.id,
-          tierName: t.name,
-          price: t.price,
-          qty: q,
-        });
-      }
+    selectedSeats.forEach((s) => {
+      cart.add({
+        kind: "ticket",
+        eventId: event.id,
+        eventTitle: event.title,
+        eventDate: event.dateLabel.full,
+        eventVenue: `${event.venue} · ${event.city}`,
+        tierId: s.tierId,
+        tierName: s.sectionName,
+        seatId: s.id,
+        seatLabel: s.label,
+        price: s.price,
+        qty: 1,
+      });
     });
+    setSelectedSeats([]);
   };
 
   const handleAddToCart = () => {
