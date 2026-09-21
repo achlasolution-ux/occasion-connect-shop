@@ -4,7 +4,11 @@ import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { getEvent, formatMoney, type EventItem } from "@/lib/data";
 import { cart } from "@/lib/cart";
-import { MapPin, Calendar, Clock, Minus, Plus, Share2, ShieldCheck, ChevronDown, Info, Heart } from "lucide-react";
+import { SeatMapView } from "@/components/SeatMapView";
+import { MAX_SEATS, type Seat } from "@/lib/seating";
+import { MapPin, Calendar, Clock, Share2, ShieldCheck, Heart, X } from "lucide-react";
+
+type SelectedSeat = Seat & { sectionName: string; price: number };
 
 export const Route = createFileRoute("/events/$id")({
   loader: ({ params }): { event: NonNullable<ReturnType<typeof getEvent>> } => {
