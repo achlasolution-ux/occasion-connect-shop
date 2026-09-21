@@ -28,14 +28,16 @@ export function SeatMapView({ event, selected, onToggle }: Props) {
     setOffset({ x: 0, y: 0 });
   }, []);
 
-  const zoomAt = useCallback((factorTarget: number, px: number, py: number) => {
-    setZoom((z) => {
-      const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, factorTarget(z)));
-      const k = next / z;
-      setOffset((o) => ({ x: px - (px - o.x) * k, y: py - (py - o.y) * k }));
-      return next;
-    });
-  }, []) as unknown as (f: (z: number) => number, px: number, py: number) => void;
+  const view = useRef({ zoom: 0.8, x: 0, y: 0 });
+  view.current = { zoom, x: offset.x, y: offset.y };
+
+  const zoomAt = useCallback((factor: (z: number) => number, px: number, py: number) => {
+    const { zoom: z, x, y } = view.current;
+    const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, factor(z)));
+    const k = next / z;
+    setZoom(next);
+    setOffset({ x: px - (px - x) * k, y: py - (py - y) * k });
+  }, []);
 
   const wheelRef = useRef<(e: WheelEvent) => void>(() => {});
   wheelRef.current = (e: WheelEvent) => {
