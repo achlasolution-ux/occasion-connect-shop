@@ -15,13 +15,13 @@ import { Footer } from "@/components/landing/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Gateflow — Tickets and merch for live events" },
+      { title: "Achla — Tickets and merch for live events" },
       {
         name: "description",
         content:
-          "Buy tickets to live events and shop official merch from the artists. Gateflow is the all-in-one platform for tickets and tour merch.",
+          "Buy tickets to live events and shop official merch from the artists. Achla is the all-in-one platform for tickets and tour merch.",
       },
-      { property: "og:title", content: "Gateflow — Tickets and merch for live events" },
+      { property: "og:title", content: "Achla — Tickets and merch for live events" },
       {
         property: "og:description",
         content: "Tickets, tees, hoodies — straight from the artist.",

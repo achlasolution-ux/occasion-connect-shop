@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Ticket, ArrowRight, Calendar, MapPin, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/tickets/")({
-  head: () => ({ meta: [{ title: "My tickets — Gateflow" }] }),
+  head: () => ({ meta: [{ title: "My tickets — Achla" }] }),
   component: TicketsPage,
 });
 
@@ -79,7 +79,7 @@ function TicketsPage() {
                             className="group block rounded-2xl bg-foreground p-5 text-background shadow-card transition hover:-translate-y-0.5 hover:shadow-lift"
                           >
                             <div className="flex items-start justify-between gap-3">
-                              <div className="text-xs font-bold uppercase tracking-wider text-brand">{t.tier_name}</div>
+                              <div className="text-xs font-bold uppercase tracking-wider text-brand">{t.tier_name}{t.seat_label ? ` · Seat ${t.seat_label}` : ""}</div>
                               <div className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase text-brand-foreground">{t.status}</div>
                             </div>
                             <div className="mt-2 font-display text-xl font-extrabold leading-tight">{t.event_title}</div>

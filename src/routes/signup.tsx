@@ -9,8 +9,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Create account — Gateflow" },
-      { name: "description", content: "Join Gateflow to buy tickets and shop official event merch." },
+      { title: "Create account — Achla" },
+      { name: "description", content: "Join Achla to buy tickets and shop official event merch." },
     ],
   }),
   component: SignupPage,
@@ -51,7 +51,7 @@ function SignupPage() {
             className="rounded-3xl bg-card p-8 shadow-card"
           >
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Get started</p>
-            <h2 className="mt-1 font-display text-3xl font-extrabold">Create your Gateflow account</h2>
+            <h2 className="mt-1 font-display text-3xl font-extrabold">Create your Achla account</h2>
             <p className="mt-1 text-sm text-muted-foreground">Tickets, merch and drops — all in one place.</p>
 
             <div className="mt-8 space-y-4">

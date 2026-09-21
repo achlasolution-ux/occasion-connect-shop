@@ -11,9 +11,9 @@ export const Route = createFileRoute("/events/")({
   }),
   head: () => ({
     meta: [
-      { title: "Browse events — Gateflow" },
+      { title: "Browse events — Achla" },
       { name: "description", content: "Concerts, theatre, sports and live shows. Find your next night out." },
-      { property: "og:title", content: "Browse events — Gateflow" },
+      { property: "og:title", content: "Browse events — Achla" },
       { property: "og:description", content: "Filter live events by city, date, category and price." },
     ],
   }),

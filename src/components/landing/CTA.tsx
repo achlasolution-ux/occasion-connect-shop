@@ -7,11 +7,11 @@ export function CTA() {
         aria-hidden
         className="pointer-events-none absolute -right-20 top-1/2 -translate-y-1/2 select-none font-display text-[28vw] font-black leading-none text-accent-foreground/10"
       >
-        GATEFLOW
+        ACHLA
       </div>
       <div className="relative mx-auto max-w-5xl px-4 text-center sm:px-6">
         <h2 className="font-display text-5xl font-black tracking-tight text-balance sm:text-6xl md:text-7xl">
-          Run your event on Gateflow.
+          Run your event on Achla.
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-accent-foreground/85">
           Sell tickets, launch merch drops and manage entry — all from one

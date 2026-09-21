@@ -5,8 +5,8 @@ import { ShieldCheck, Clock, XCircle, RefreshCw, CheckCircle2 } from "lucide-rea
 export const Route = createFileRoute("/refunds")({
   head: () => ({
     meta: [
-      { title: "Refund policy — Gateflow" },
-      { name: "description", content: "How refunds work for Gateflow tickets and merchandise." },
+      { title: "Refund policy — Achla" },
+      { name: "description", content: "How refunds work for Achla tickets and merchandise." },
     ],
   }),
   component: RefundsPage,
@@ -57,7 +57,7 @@ function RefundsPage() {
 
             <Block title="Service fees">
               The 5% service fee shown at checkout covers payment processing, ticket delivery and customer
-              support. It is non-refundable, except where refund is required by law or where Gateflow has made
+              support. It is non-refundable, except where refund is required by law or where Achla has made
               an error.
             </Block>
 
@@ -76,7 +76,7 @@ function RefundsPage() {
           <div className="mt-12 flex items-center gap-3 rounded-2xl bg-foreground p-5 text-background">
             <ShieldCheck className="h-8 w-8 text-brand" />
             <div className="text-sm">
-              <div className="font-display text-lg font-bold">Gateflow Buyer Protection</div>
+              <div className="font-display text-lg font-bold">Achla Buyer Protection</div>
               <div className="text-background/70">Every purchase is covered. If something goes wrong, we make it right.</div>
             </div>
           </div>

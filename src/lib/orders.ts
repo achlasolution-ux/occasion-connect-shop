@@ -22,6 +22,8 @@ export type DBTicket = {
   event_date: string | null;
   event_venue: string | null;
   tier_name: string;
+  seat_label: string | null;
+  section_name: string | null;
   ticket_code: string;
   status: string;
   image_url: string | null;
@@ -68,9 +70,12 @@ export async function createOrder(args: {
   const orderItems = items.map((i) => ({
     order_id: order.id,
     kind: i.kind,
-    ref_id: i.kind === "ticket" ? `${i.eventId}:${i.tierId}` : i.productId ?? "",
+    ref_id: i.kind === "ticket" ? `${i.eventId}:${i.tierId}:${i.seatId ?? ""}` : i.productId ?? "",
     title: i.kind === "ticket" ? i.eventTitle ?? "" : i.productName ?? "",
-    subtitle: i.kind === "ticket" ? i.tierName ?? "" : i.size ?? "",
+    subtitle:
+      i.kind === "ticket"
+        ? [i.tierName, i.seatLabel ? `Seat ${i.seatLabel}` : null].filter(Boolean).join(" · ")
+        : i.size ?? "",
     unit_price_cents: Math.round(i.price * 100),
     quantity: i.qty,
     image_url: i.kind === "merch" ? i.productImg ?? null : null,
@@ -90,6 +95,8 @@ export async function createOrder(args: {
         event_date: i.eventDate ?? null,
         event_venue: i.eventVenue ?? null,
         tier_name: i.tierName ?? "",
+        seat_label: i.seatLabel ?? null,
+        section_name: i.tierName ?? null,
       }))
     );
   if (ticketRows.length > 0) {

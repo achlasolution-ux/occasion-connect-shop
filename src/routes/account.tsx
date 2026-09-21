@@ -8,7 +8,7 @@ import { Loader2, User as UserIcon, Mail, Phone, LogOut, Ticket, ArrowRight } fr
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/account")({
-  head: () => ({ meta: [{ title: "Account — Gateflow" }] }),
+  head: () => ({ meta: [{ title: "Account — Achla" }] }),
   component: AccountPage,
 });
 

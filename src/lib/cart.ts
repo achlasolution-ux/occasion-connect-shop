@@ -9,6 +9,8 @@ export type CartItem = {
   eventVenue?: string;
   tierId?: string;
   tierName?: string;
+  seatId?: string;
+  seatLabel?: string;
   productId?: string;
   productName?: string;
   productImg?: string;

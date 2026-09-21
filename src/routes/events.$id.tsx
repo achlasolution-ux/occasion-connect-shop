@@ -4,7 +4,11 @@ import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { getEvent, formatMoney, type EventItem } from "@/lib/data";
 import { cart } from "@/lib/cart";
-import { MapPin, Calendar, Clock, Minus, Plus, Share2, ShieldCheck, ChevronDown, Info, Heart } from "lucide-react";
+import { SeatMapView } from "@/components/SeatMapView";
+import { MAX_SEATS, type Seat } from "@/lib/seating";
+import { MapPin, Calendar, Clock, Share2, ShieldCheck, Heart, X } from "lucide-react";
+
+type SelectedSeat = Seat & { sectionName: string; price: number };
 
 export const Route = createFileRoute("/events/$id")({
   loader: ({ params }): { event: NonNullable<ReturnType<typeof getEvent>> } => {
@@ -15,7 +19,7 @@ export const Route = createFileRoute("/events/$id")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.event.title} — Gateflow` },
+          { title: `${loaderData.event.title} — Achla` },
           { name: "description", content: loaderData.event.about.slice(0, 150) },
           { property: "og:title", content: loaderData.event.title },
           { property: "og:image", content: loaderData.event.img },
@@ -44,33 +48,37 @@ export const Route = createFileRoute("/events/$id")({
 function EventDetailPage() {
   const { event } = Route.useLoaderData() as { event: EventItem };
   const navigate = useNavigate();
-  const [selected, setSelected] = useState<Record<string, number>>({});
-  const [openInfo, setOpenInfo] = useState<Record<string, boolean>>({});
+  const [selectedSeats, setSelectedSeats] = useState<SelectedSeat[]>([]);
   const [showFullAbout, setShowFullAbout] = useState(false);
 
-  const qtyFor = (id: string) => selected[id] ?? 0;
-  const setQty = (id: string, n: number) => setSelected((s) => ({ ...s, [id]: Math.max(0, Math.min(10, n)) }));
+  const toggleSeat = (seat: Seat, sectionName: string, price: number) => {
+    setSelectedSeats((cur) => {
+      if (cur.some((s) => s.id === seat.id)) return cur.filter((s) => s.id !== seat.id);
+      if (cur.length >= MAX_SEATS) return cur;
+      return [...cur, { ...seat, sectionName, price }];
+    });
+  };
 
-  const total = event.tiers.reduce((s, t) => s + t.price * qtyFor(t.id), 0);
-  const totalQty = event.tiers.reduce((s, t) => s + qtyFor(t.id), 0);
+  const total = selectedSeats.reduce((s, x) => s + x.price, 0);
+  const totalQty = selectedSeats.length;
 
   const addAllToCart = () => {
-    event.tiers.forEach((t) => {
-      const q = qtyFor(t.id);
-      if (q > 0) {
-        cart.add({
-          kind: "ticket",
-          eventId: event.id,
-          eventTitle: event.title,
-          eventDate: event.dateLabel.full,
-          eventVenue: `${event.venue} · ${event.city}`,
-          tierId: t.id,
-          tierName: t.name,
-          price: t.price,
-          qty: q,
-        });
-      }
+    selectedSeats.forEach((s) => {
+      cart.add({
+        kind: "ticket",
+        eventId: event.id,
+        eventTitle: event.title,
+        eventDate: event.dateLabel.full,
+        eventVenue: `${event.venue} · ${event.city}`,
+        tierId: s.tierId,
+        tierName: s.sectionName,
+        seatId: s.id,
+        seatLabel: s.label,
+        price: s.price,
+        qty: 1,
+      });
     });
+    setSelectedSeats([]);
   };
 
   const handleAddToCart = () => {
@@ -169,89 +177,83 @@ function EventDetailPage() {
               </div>
             </div>
 
-            {/* Tickets */}
+            {/* Seat selection */}
             <div className="mt-8">
               <div className="flex items-center gap-2 border-b-2 border-foreground/10 pb-2">
-                <h2 className="font-display text-sm font-bold uppercase tracking-[0.2em]">Tickets available</h2>
+                <h2 className="font-display text-sm font-bold uppercase tracking-[0.2em]">Pick your seats</h2>
                 <span className="h-0.5 flex-1 bg-brand" />
               </div>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {event.tiers.map((t) => {
-                  const q = qtyFor(t.id);
-                  const isOpen = !!openInfo[t.id];
-                  return (
-                    <div
-                      key={t.id}
-                      className={`rounded-2xl border-2 bg-card p-4 transition ${
-                        q > 0 ? "border-brand shadow-lift" : "border-foreground/10 shadow-card"
-                      }`}
+              <p className="mt-3 text-sm text-muted-foreground">
+                Tap a seat on the map to select it. You can choose up to {MAX_SEATS} seats per order.
+              </p>
+
+              <div className="mt-4">
+                <SeatMapView event={event} selected={selectedSeats.map((s) => s.id)} onToggle={toggleSeat} />
+              </div>
+
+              <div className="mt-5 rounded-2xl border-2 border-foreground/10 bg-card p-4 shadow-card">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-sm font-bold uppercase tracking-[0.2em]">
+                    Your seats ({selectedSeats.length})
+                  </h3>
+                  {selectedSeats.length > 0 && (
+                    <button
+                      onClick={() => setSelectedSeats([])}
+                      className="text-xs font-bold text-brand underline-offset-4 hover:underline"
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      Clear all
+                    </button>
+                  )}
+                </div>
+
+                {selectedSeats.length === 0 ? (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    No seats selected yet — choose any highlighted seat above.
+                  </p>
+                ) : (
+                  <ul className="mt-3 divide-y divide-border">
+                    {selectedSeats.map((s) => (
+                      <li key={s.id} className="flex items-center justify-between gap-3 py-2.5">
                         <div className="min-w-0">
-                          <h3 className="font-display text-base font-bold leading-tight">{t.name}</h3>
-                          <div className="mt-1 text-sm font-bold text-foreground">{formatMoney(t.price)}</div>
+                          <div className="text-sm font-bold">{s.sectionName}</div>
+                          <div className="text-xs text-muted-foreground">
+                            Row {s.row} · Seat {s.num}
+                          </div>
                         </div>
-                        <button
-                          onClick={() => setQty(t.id, q + 1)}
-                          aria-label="Add"
-                          className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-foreground text-foreground transition hover:bg-foreground hover:text-background"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </button>
-                      </div>
-
-                      {t.remaining < 50 && (
-                        <div className="mt-2 inline-flex rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">
-                          Only {t.remaining} left
-                        </div>
-                      )}
-
-                      <div className="mt-3 flex items-center justify-between rounded-xl bg-muted/50 px-3 py-2">
-                        <div className="text-xs text-muted-foreground">
-                          <div>Valid from</div>
-                          <div className="font-bold text-foreground">{event.dateLabel.full}</div>
-                        </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-bold">{formatMoney(s.price)}</span>
                           <button
-                            onClick={() => setQty(t.id, q - 1)}
-                            disabled={q === 0}
-                            aria-label="Decrease"
-                            className="grid h-7 w-7 place-items-center rounded-full bg-background text-foreground disabled:opacity-30"
+                            onClick={() => setSelectedSeats((cur) => cur.filter((x) => x.id !== s.id))}
+                            aria-label={`Remove seat ${s.label}`}
+                            className="grid h-7 w-7 place-items-center rounded-full bg-muted text-foreground transition hover:bg-foreground hover:text-background"
                           >
-                            <Minus className="h-3.5 w-3.5" />
-                          </button>
-                          <span className="min-w-4 text-center text-sm font-bold">{q}</span>
-                          <button
-                            onClick={() => setQty(t.id, q + 1)}
-                            aria-label="Increase"
-                            className="grid h-7 w-7 place-items-center rounded-full bg-foreground text-background"
-                          >
-                            <Plus className="h-3.5 w-3.5" />
+                            <X className="h-3.5 w-3.5" />
                           </button>
                         </div>
-                      </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
 
-                      <button
-                        onClick={() => setOpenInfo((s) => ({ ...s, [t.id]: !isOpen }))}
-                        className="mt-3 flex items-center gap-1 text-xs font-bold text-brand underline-offset-4 hover:underline"
-                      >
-                        <Info className="h-3 w-3" />
-                        {isOpen ? "Hide info" : "Show more info"}
-                        <ChevronDown className={`h-3 w-3 transition ${isOpen ? "rotate-180" : ""}`} />
-                      </button>
-                      {isOpen && (
-                        <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                          {t.perks.map((p) => (
-                            <li key={p}>· {p}</li>
-                          ))}
-                        </ul>
-                      )}
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                {event.tiers.map((t) => (
+                  <div key={t.id} className="rounded-2xl border border-border bg-card p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold">{t.name}</span>
+                      <span className="text-sm font-bold">{formatMoney(t.price)}</span>
                     </div>
-                  );
-                })}
+                    <ul className="mt-1 text-xs text-muted-foreground">
+                      {t.perks.map((p) => (
+                        <li key={p}>· {p}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
+
 
             {/* Subtotal + actions (desktop) */}
             <div className="mt-6 hidden rounded-2xl bg-foreground p-1 shadow-lift lg:block">

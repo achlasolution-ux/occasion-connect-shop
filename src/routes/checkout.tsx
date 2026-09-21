@@ -10,7 +10,7 @@ import { ShieldCheck, Smartphone, CreditCard, Apple, Lock, ArrowRight, Loader2 }
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({ meta: [{ title: "Checkout — Gateflow" }] }),
+  head: () => ({ meta: [{ title: "Checkout — Achla" }] }),
   component: CheckoutPage,
 });
 
@@ -180,7 +180,7 @@ function CheckoutPage() {
                     <div className="min-w-0">
                       <div className="truncate font-semibold">{i.kind === "ticket" ? i.eventTitle : i.productName}</div>
                       <div className="truncate text-xs text-background/60">
-                        {i.qty} × {i.kind === "ticket" ? i.tierName : `Size ${i.size}`}
+                        {i.qty} × {i.kind === "ticket" ? `${i.tierName}${i.seatLabel ? ` · Seat ${i.seatLabel}` : ""}` : `Size ${i.size}`}
                       </div>
                     </div>
                     <span className="shrink-0 font-mono">{formatMoney(i.price * i.qty)}</span>
