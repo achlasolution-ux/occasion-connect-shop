@@ -40,7 +40,7 @@ export function Nav() {
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background">
               <span className="font-display text-lg font-extrabold">G</span>
             </div>
-            <span className="font-display text-2xl font-extrabold tracking-tight">Gateflow</span>
+            <span className="font-display text-2xl font-extrabold tracking-tight">Achla</span>
           </Link>
           <nav className="hidden items-center gap-1 lg:flex">
             {links.map((l) => (

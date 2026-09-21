@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { CheckCircle2, Download, Calendar, MapPin, Ticket as TicketIcon, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/tickets/$orderId")({
-  head: () => ({ meta: [{ title: "Your ticket — Gateflow" }] }),
+  head: () => ({ meta: [{ title: "Your ticket — Achla" }] }),
   component: OrderPage,
 });
 
@@ -80,7 +80,7 @@ function OrderPage() {
             >
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-background/10 px-6 py-4">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand">
-                  <TicketIcon className="h-4 w-4" /> Gateflow ticket
+                  <TicketIcon className="h-4 w-4" /> Achla ticket
                 </div>
                 <div className="text-xs text-background/60">{t.tier_name}</div>
               </div>

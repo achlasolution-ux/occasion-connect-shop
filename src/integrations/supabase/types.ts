@@ -146,6 +146,8 @@ export type Database = {
           id: string
           image_url: string | null
           order_id: string
+          seat_label: string | null
+          section_name: string | null
           status: string
           ticket_code: string
           tier_name: string
@@ -160,6 +162,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           order_id: string
+          seat_label?: string | null
+          section_name?: string | null
           status?: string
           ticket_code?: string
           tier_name: string
@@ -174,6 +178,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           order_id?: string
+          seat_label?: string | null
+          section_name?: string | null
           status?: string
           ticket_code?: string
           tier_name?: string

@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 const faqs = [
   {
     q: "How do I receive my ticket?",
-    a: "Your QR ticket lands in your Gateflow account the moment payment clears. Open it from My Tickets — it scans once at the door and works offline.",
+    a: "Your QR ticket lands in your Achla account the moment payment clears. Open it from My Tickets — it scans once at the door and works offline.",
   },
   {
     q: "Can I get a refund?",

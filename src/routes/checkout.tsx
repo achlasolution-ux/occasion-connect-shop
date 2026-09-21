@@ -10,7 +10,7 @@ import { ShieldCheck, Smartphone, CreditCard, Apple, Lock, ArrowRight, Loader2 }
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({ meta: [{ title: "Checkout — Gateflow" }] }),
+  head: () => ({ meta: [{ title: "Checkout — Achla" }] }),
   component: CheckoutPage,
 });
 

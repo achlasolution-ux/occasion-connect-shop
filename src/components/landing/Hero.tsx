@@ -54,7 +54,7 @@ export function Hero() {
           </h1>
 
           <p className="mt-6 max-w-md text-lg text-foreground/80">
-            Gateflow is the home for live events. Buy tickets in seconds, then grab
+            Achla is the home for live events. Buy tickets in seconds, then grab
             the official tee, hoodie or cap from the artist's drop.
           </p>
 
